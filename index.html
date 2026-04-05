@@ -1,1 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Syed Family Adventure · Bali & Gili · Summer 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --gold:#C9A84C; --gold-light:#E8CC7A; --cream:#F5EFE0;
+  --dark:#0D0D0B; --text:#EDE8DC; --muted:rgba(237,232,220,0.55);
+  --card-bg:rgba(255,255,255,0.07); --card-border:rgba(201,168,76,0.25);
+}
+html,body { width:100%; height:100%; background:var(--dark); font-family:'Jost',sans-serif; color:var(--text); overflow:hidden; }
+.deck { position:fixed; inset:0; }
+.slide { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 1.2s cubic-bezier(.4,0,.2,1); pointer-events:none; }
+.slide.active { opacity:1; pointer-events:all; }
+.bg { position:absolute; inset:0; background-size:cover; background-position:center; transition:transform 14s ease; background-color:#1a1a10; }
+.slide.active .bg { transform:scale(1.05); }
+.ov      { position:absolute; inset:0; background:linear-gradient(135deg,rgba(13,13,11,.88) 0%,rgba(13,13,11,.35) 55%,rgba(13,13,11,.65) 100%); }
+.ovb     { position:absolute; bottom:0; left:0; right:0; height:45%; background:linear-gradient(to top,rgba(13,13,11,.93),transparent); }
+.ov-dark { position:absolute; inset:0; background:rgba(13,13,11,.75); }
+.ov-side { position:absolute; inset:0; background:linear-gradient(90deg,rgba(13,13,11,.9) 0%,rgba(13,13,11,.55) 45%,rgba(13,13,11,.1) 100%); }
+.ov-right{ position:absolute; inset:0; background:linear-gradient(270deg,rgba(13,13,11,.9) 0%,rgba(13,13,11,.55) 45%,rgba(13,13,11,.1) 100%); }
+.content { position:relative; z-index:10; width:88%; max-width:1700px; display:flex; flex-direction:column; }
+.content.left   { align-items:flex-start; }
+.content.center { align-items:center; text-align:center; }
+.content.right  { align-items:flex-end; text-align:right; }
+.eyebrow { font-family:'Jost',sans-serif; font-weight:300; font-size:clamp(11px,1.1vw,15px); letter-spacing:.4em; text-transform:uppercase; color:var(--gold); margin-bottom:1.4rem; }
+.headline { font-family:'Cormorant Garamond',serif; font-weight:300; font-size:clamp(46px,7vw,112px); line-height:1.0; color:var(--cream); margin-bottom:1.2rem; }
+.headline em { font-style:italic; color:var(--gold-light); }
+.subhead { font-family:'Cormorant Garamond',serif; font-size:clamp(18px,2.2vw,34px); font-weight:300; font-style:italic; color:var(--muted); margin-bottom:2rem; line-height:1.4; }
+.rule { width:56px; height:1px; background:var(--gold); margin-bottom:2rem; }
+.cards { display:grid; width:100%; gap:1.3rem; margin-top:1.8rem; }
+.cards.c2{grid-template-columns:repeat(2,1fr)} .cards.c3{grid-template-columns:repeat(3,1fr)} .cards.c4{grid-template-columns:repeat(4,1fr)}
+.card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:3px; padding:1.8rem 2rem; backdrop-filter:blur(16px); }
+.card-icon{font-size:clamp(22px,2.5vw,34px);margin-bottom:.7rem;display:block}
+.card-label{font-family:'Jost',sans-serif;font-weight:500;font-size:clamp(9px,.95vw,13px);letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+.card-big{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3.8vw,56px);font-weight:300;color:var(--cream);line-height:1;margin-bottom:.3rem}
+.card-body{font-family:'Jost',sans-serif;font-weight:300;font-size:clamp(12px,1.2vw,16px);color:var(--text);line-height:1.65}
+.card-muted{font-size:clamp(10px,1vw,13px);color:var(--muted);margin-top:.4rem}
+.photo-cards{display:grid;width:100%;gap:1.2rem}
+.photo-cards.c3{grid-template-columns:repeat(3,1fr)} .photo-cards.c4{grid-template-columns:repeat(4,1fr)}
+.photo-card{border-radius:4px;overflow:hidden;position:relative;aspect-ratio:4/3;background:#111}
+.photo-card img{width:100%;height:100%;object-fit:cover;display:block}
+.photo-card-label{position:absolute;bottom:0;left:0;right:0;padding:1.2rem 1rem .9rem;background:linear-gradient(to top,rgba(13,13,11,.9),transparent);font-family:'Jost',sans-serif;font-weight:400;font-size:clamp(11px,1.1vw,15px);letter-spacing:.15em;text-transform:uppercase;color:var(--cream)}
+.photo-card-sub{font-size:clamp(10px,.9vw,12px);color:var(--muted);font-weight:300;letter-spacing:.05em;margin-top:.2rem}
+.timeline{display:flex;width:100%;margin-top:2rem}
+.tleg{flex:1;padding:1.6rem 1.4rem;border-left:1px solid rgba(201,168,76,.2);position:relative}
+.tleg:first-child{border-left:2px solid var(--gold)}
+.tleg-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);position:absolute;top:1.8rem;left:-5px}
+.tleg-n{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,50px);font-weight:300;color:var(--gold);line-height:1}
+.tleg-u{font-size:clamp(9px,.85vw,11px);letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-weight:300;display:block;margin-bottom:.6rem}
+.tleg-pl{font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.6vw,24px);color:var(--cream);margin-bottom:.3rem}
+.tleg-ds{font-size:clamp(10px,.95vw,13px);color:var(--muted);font-weight:300;line-height:1.5}
+.split{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:2.5rem;align-items:start;margin-top:1.8rem}
+.split-panel{padding:2.2rem;background:var(--card-bg);border:1px solid var(--card-border);border-radius:3px;backdrop-filter:blur(16px)}
+.split-panel.featured{border-color:rgba(201,168,76,.5)}
+.split-title{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,2.8vw,44px);font-weight:300;color:var(--cream);margin-bottom:.4rem}
+.split-sub{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--muted);font-size:clamp(13px,1.3vw,18px);margin-bottom:1.2rem}
+.split-item{display:flex;gap:.9rem;margin-bottom:.9rem;align-items:flex-start}
+.split-icon{color:var(--gold);flex-shrink:0;padding-top:.15rem}
+.split-text{font-size:clamp(12px,1.2vw,16px);font-weight:300;color:var(--text);line-height:1.6}
+.verdict{margin-top:1.2rem;padding:.9rem 1.1rem;border-left:2px solid var(--gold);background:rgba(201,168,76,.06);font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.5vw,20px);color:var(--gold-light);font-style:italic}
+.compare{width:100%;border-collapse:collapse;margin-top:1.8rem}
+.compare th{font-family:'Jost',sans-serif;font-weight:300;font-size:clamp(9px,.95vw,13px);letter-spacing:.3em;text-transform:uppercase;padding:.9rem 1.4rem;text-align:left;border-bottom:1px solid rgba(201,168,76,.4)}
+.compare th.hl{color:var(--gold)}
+.compare td{padding:.8rem 1.4rem;font-size:clamp(12px,1.2vw,16px);font-weight:300;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top}
+.compare td.cat{color:var(--muted);font-size:clamp(10px,1vw,13px);letter-spacing:.1em;text-transform:uppercase}
+.compare td.hl{color:var(--cream)}
+.badge{display:inline-block;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.35);color:var(--gold);font-size:clamp(9px,.85vw,11px);letter-spacing:.15em;text-transform:uppercase;padding:.2rem .6rem;border-radius:2px}
+.act-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;width:100%;margin-top:1.8rem}
+.act-item{padding:1.4rem;border:1px solid var(--card-border);background:var(--card-bg);border-radius:3px;backdrop-filter:blur(12px)}
+.act-emoji{font-size:clamp(22px,2.5vw,36px);display:block;margin-bottom:.6rem}
+.act-name{font-family:'Jost',sans-serif;font-weight:400;font-size:clamp(12px,1.2vw,16px);color:var(--cream);margin-bottom:.3rem}
+.act-desc{font-size:clamp(10px,1vw,13px);color:var(--muted);font-weight:300;line-height:1.5}
+.links-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;width:100%;margin-top:1.6rem}
+.link-group{background:var(--card-bg);border:1px solid var(--card-border);border-radius:3px;padding:1.5rem 1.7rem;backdrop-filter:blur(16px)}
+.link-group-title{font-family:'Cormorant Garamond',serif;font-size:clamp(17px,1.8vw,26px);font-weight:300;color:var(--cream);margin-bottom:.9rem;border-bottom:1px solid rgba(201,168,76,.2);padding-bottom:.6rem}
+.link-item{margin-bottom:.65rem}
+.link-item a{color:var(--gold-light);font-size:clamp(11px,1.05vw,14px);font-weight:300;text-decoration:none;display:flex;align-items:flex-start;gap:.5rem;line-height:1.4}
+.link-item a:hover{color:var(--gold)}
+.link-item a::before{content:'→';color:var(--gold);flex-shrink:0}
+.link-desc{font-size:clamp(9px,.9vw,12px);color:var(--muted);margin-top:.1rem;margin-left:1.1rem;line-height:1.4}
+#nav{position:fixed;bottom:2.4rem;left:50%;transform:translateX(-50%);z-index:100;display:flex;gap:.7rem;align-items:center}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(237,232,220,.2);cursor:pointer;transition:all .4s ease;border:none;padding:0}
+.dot.active{background:var(--gold);width:20px;border-radius:3px}
+#slide-num{position:fixed;bottom:2.5rem;right:2.5rem;z-index:100;font-family:'Jost',sans-serif;font-weight:300;font-size:12px;letter-spacing:.3em;color:var(--muted)}
+#hint{position:fixed;bottom:2.5rem;left:2.5rem;z-index:100;font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:.2em;color:rgba(237,232,220,.22);text-transform:uppercase}
+#progress{position:fixed;top:0;left:0;height:2px;background:var(--gold);z-index:200;transition:width .5s ease}
+.slide.active .au{animation:fadeUp .85s ease both}
+.slide.active .au:nth-child(1){animation-delay:.08s}.slide.active .au:nth-child(2){animation-delay:.22s}
+.slide.active .au:nth-child(3){animation-delay:.36s}.slide.active .au:nth-child(4){animation-delay:.5s}
+.slide.active .au:nth-child(5){animation-delay:.64s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  html,body { overflow:hidden; }
+
+  .content { width:92%; }
+
+  .eyebrow { font-size:11px; letter-spacing:.25em; margin-bottom:.9rem; }
+  .headline { font-size:clamp(32px,10vw,56px); margin-bottom:.8rem; }
+  .subhead  { font-size:clamp(15px,5vw,22px); margin-bottom:1.2rem; }
+  .rule     { margin-bottom:1.2rem; }
+
+  /* Single column cards */
+  .cards.c2,.cards.c3,.cards.c4 { grid-template-columns:1fr 1fr; gap:.7rem; margin-top:1rem; }
+  .card { padding:1rem 1.1rem; }
+  .card-big { font-size:clamp(24px,8vw,36px); }
+  .card-body { font-size:12px; line-height:1.5; }
+  .card-muted { font-size:10px; }
+
+  /* Photo cards — 2 col on mobile */
+  .photo-cards.c3,.photo-cards.c4 { grid-template-columns:1fr 1fr; gap:.6rem; }
+  .photo-card { aspect-ratio:4/3; }
+  .photo-card-label { font-size:10px; padding:.7rem .6rem .5rem; }
+  .photo-card-sub { display:none; }
+
+  /* Timeline — scroll horizontally */
+  .timeline { overflow-x:auto; gap:0; padding-bottom:.5rem; }
+  .tleg { min-width:130px; padding:1rem .9rem; }
+  .tleg-n { font-size:28px; }
+  .tleg-pl { font-size:14px; }
+  .tleg-ds { font-size:10px; }
+
+  /* Split panels — stack vertically */
+  .split { grid-template-columns:1fr; gap:1rem; margin-top:1rem; }
+  .split-panel { padding:1.2rem; }
+  .split-title { font-size:22px; }
+  .split-text { font-size:12px; }
+  .split-item { margin-bottom:.6rem; gap:.6rem; }
+
+  /* Compare table — simplify */
+  .compare th,.compare td { padding:.5rem .7rem; font-size:11px; }
+  .compare th { font-size:10px; letter-spacing:.1em; }
+  .verdict { font-size:12px; padding:.6rem .8rem; }
+  .badge { font-size:9px; }
+
+  /* Activity grid — 2 col */
+  .act-grid { grid-template-columns:1fr 1fr; gap:.7rem; margin-top:1rem; }
+  .act-item { padding:1rem; }
+  .act-emoji { font-size:22px; }
+  .act-name  { font-size:12px; }
+  .act-desc  { font-size:10px; }
+
+  /* Links page — single column */
+  .links-grid { grid-template-columns:1fr; gap:.8rem; margin-top:1rem; overflow-y:auto; max-height:65vh; }
+  .link-group { padding:1rem 1.2rem; }
+  .link-group-title { font-size:16px; margin-bottom:.7rem; }
+  .link-item a { font-size:12px; }
+  .link-desc { font-size:10px; }
+
+  /* Nav dots — smaller */
+  #nav { bottom:1.4rem; gap:.5rem; }
+  .dot { width:5px; height:5px; }
+  .dot.active { width:14px; }
+  #slide-num { font-size:10px; bottom:1.6rem; right:1.2rem; }
+  #hint { display:none; }
+
+  /* Cost slide flex → stack */
+  .card[style*="flex-direction:row"] { flex-direction:column !important; gap:1rem !important; }
+  .card[style*="flex-direction:row"] > div[style*="width:1px"] { display:none; }
+}
+
+@media (max-width: 480px) {
+  .headline { font-size:clamp(28px,11vw,44px); }
+  .cards.c2,.cards.c3,.cards.c4 { grid-template-columns:1fr; }
+  .photo-cards.c3,.photo-cards.c4 { grid-template-columns:1fr 1fr; }
+  .act-grid { grid-template-columns:1fr; }
+  .compare { font-size:10px; }
+  .compare th:first-child,.compare td:first-child { display:none; }
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div class="deck">
+
+<!-- SLIDE 01 · TITLE | images/01-title.jpg → Aerial Bali rice terraces -->
+<div class="slide active" data-slide="0">
+  <div class="bg" style="background-image:url('images/01-title.jpg')"></div>
+  <div class="ov"></div><div class="ovb"></div>
+  <div class="content center">
+    <div class="eyebrow au">Summer 2026 · Family Holiday</div>
+    <div class="headline au">The Syed Family<br><em>Adventure</em></div>
+    <div class="subhead au">Bali &nbsp;·&nbsp; Gili Islands &nbsp;·&nbsp; Singapore</div>
+    <div class="rule au" style="margin:0 auto"></div>
+    <p class="au" style="font-family:'Jost',sans-serif;font-weight:300;font-size:clamp(12px,1.2vw,16px);letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-top:1.8rem;">Babar &nbsp;·&nbsp; Gaynor &nbsp;·&nbsp; Laila</p>
+  </div>
+</div>
+
+<!-- SLIDE 02 · ITINERARY | images/02-itinerary.jpg → Bali jungle valley or river gorge -->
+<div class="slide" data-slide="1">
+  <div class="bg" style="background-image:url('images/02-itinerary.jpg')"></div>
+  <div class="ov-dark"></div>
+  <div class="content left">
+    <div class="eyebrow au">The Itinerary</div>
+    <div class="headline au" style="font-size:clamp(38px,5.5vw,84px);">16 Nights.<br><em>Four Places.</em><br>One Trip.</div>
+    <div class="timeline au">
+      <div class="tleg"><div class="tleg-dot"></div><div class="tleg-n">2</div><span class="tleg-u">Nights</span><div class="tleg-pl">Singapore</div><div class="tleg-ds">Stopover · Supertrees · Hawker food</div></div>
+      <div class="tleg"><div class="tleg-dot"></div><div class="tleg-n">5</div><span class="tleg-u">Nights</span><div class="tleg-pl">Ubud, Bali</div><div class="tleg-ds">Jungle villa · Temples · Rice terraces</div></div>
+      <div class="tleg"><div class="tleg-dot"></div><div class="tleg-n">3</div><span class="tleg-u">Nights</span><div class="tleg-pl">Sanur or Canggu</div><div class="tleg-ds">Beach villa · Pool days · Dining</div></div>
+      <div class="tleg"><div class="tleg-dot"></div><div class="tleg-n">4</div><span class="tleg-u">Nights</span><div class="tleg-pl">Gili Air</div><div class="tleg-ds">No cars · Turtles · Snorkelling</div></div>
+      <div class="tleg"><div class="tleg-dot"></div><div class="tleg-n">✈</div><span class="tleg-u">&nbsp;</span><div class="tleg-pl">Home</div><div class="tleg-ds">Via Singapore · Late August</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 03 · SINGAPORE | images/03-singapore.jpg → Marina Bay Sands at dusk
+     images/03a-supertrees.jpg → Supertrees lit up at night
+     images/03b-hawker.jpg     → Hawker centre food spread (laksa / char kway teow)
+     images/03c-marina.jpg     → Marina Bay waterfront skyline -->
+<div class="slide" data-slide="2">
+  <div class="bg" style="background-image:url('images/03-singapore.jpg')"></div>
+  <div class="ov-side"></div><div class="ovb"></div>
+  <div class="content left">
+    <div class="eyebrow au">First Stop · 2 Nights</div>
+    <div class="headline au">Singapore</div>
+    <div class="subhead au">Where East meets extraordinary</div>
+    <div class="rule au"></div>
+    <div class="photo-cards c3 au">
+      <div class="photo-card"><img src="images/03a-supertrees.jpg" alt="Supertrees" onerror="this.parentElement.style.background='#1a2a1a'"><div class="photo-card-label">Gardens by the Bay<div class="photo-card-sub">Supertrees at night — unmissable</div></div></div>
+      <div class="photo-card"><img src="images/03b-hawker.jpg" alt="Hawker food" onerror="this.parentElement.style.background='#2a1a0a'"><div class="photo-card-label">Hawker Centres<div class="photo-card-sub">World-class street food, local prices</div></div></div>
+      <div class="photo-card"><img src="images/03c-marina.jpg" alt="Marina Bay" onerror="this.parentElement.style.background='#0a1a2a'"><div class="photo-card-label">Marina Bay<div class="photo-card-sub">Iconic skyline · infinity pool views</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 04 · UBUD | images/04-ubud.jpg → Ubud rice field valley panorama
+     images/04a-temple.jpg    → Tirta Empul or Tanah Lot temple
+     images/04b-terraces.jpg  → Tegallalang rice terraces
+     images/04c-waterfall.jpg → Tegenungan waterfall
+     images/04d-monkey.jpg    → Sacred Monkey Forest Ubud -->
+<div class="slide" data-slide="3">
+  <div class="bg" style="background-image:url('images/04-ubud.jpg')"></div>
+  <div class="ov-side"></div><div class="ovb"></div>
+  <div class="content left">
+    <div class="eyebrow au">Bali · 5 Nights</div>
+    <div class="headline au">Ubud</div>
+    <div class="subhead au">The cultural heart of Bali</div>
+    <div class="photo-cards c4 au" style="margin-top:1rem">
+      <div class="photo-card"><img src="images/04a-temple.jpg" alt="Balinese temple" onerror="this.parentElement.style.background='#1a1510'"><div class="photo-card-label">Temples<div class="photo-card-sub">Tirta Empul · Tanah Lot at sunset</div></div></div>
+      <div class="photo-card"><img src="images/01-title.jpg" alt="Rice terraces" onerror="this.parentElement.style.background='#102010'"><div class="photo-card-label">Rice Terraces<div class="photo-card-sub">Tegallalang — UNESCO heritage site</div></div></div>
+      <div class="photo-card"><img src="images/04c-waterfall.jpg" alt="Bali waterfall" onerror="this.parentElement.style.background='#101820'"><div class="photo-card-label">Waterfalls<div class="photo-card-sub">Tegenungan · short drive from Ubud</div></div></div>
+      <div class="photo-card"><img src="images/04d-monkey.jpg" alt="Monkey forest" onerror="this.parentElement.style.background='#1a1510'"><div class="photo-card-label">Monkey Forest<div class="photo-card-sub">Sacred jungle sanctuary in Ubud</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 05 · VILLA LIFE | images/05-villa.jpg → Private pool villa with jungle view
+     images/05a-pool.jpg      → Private pool, sun loungers, green backdrop
+     images/05b-bedroom.jpg   → Open tropical villa bedroom
+     images/05c-breakfast.jpg → Breakfast served on villa terrace -->
+<div class="slide" data-slide="4">
+  <div class="bg" style="background-image:url('images/05-villa.jpg')"></div>
+  <div class="ov-right"></div><div class="ovb"></div>
+  <div class="content right">
+    <div class="eyebrow au">Accommodation · Bali</div>
+    <div class="headline au"><em>Villa</em><br>Life</div>
+    <div class="subhead au">Private pool. Breakfast served. Your own space.</div>
+    <div class="rule au" style="margin-left:auto"></div>
+    <div class="photo-cards c3 au">
+      <div class="photo-card"><img src="images/05a-pool.jpg" alt="Private pool" onerror="this.parentElement.style.background='#0a1820'"><div class="photo-card-label">Private Pool<div class="photo-card-sub">No sharing. Swim any time.</div></div></div>
+      <div class="photo-card"><img src="images/05b-bedroom.jpg" alt="Villa bedroom" onerror="this.parentElement.style.background='#1a1510'"><div class="photo-card-label">Open-Air Suite<div class="photo-card-sub">A/C · garden views · daily housekeeping</div></div></div>
+      <div class="photo-card"><img src="images/05c-breakfast.jpg" alt="Villa breakfast" onerror="this.parentElement.style.background='#201a0a'"><div class="photo-card-label">Breakfast Terrace<div class="photo-card-sub">Fresh fruit · eggs · local dishes daily</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 06 · SANUR vs CANGGU | images/06-beach.jpg → Calm Bali beach, blue water -->
+<div class="slide" data-slide="5">
+  <div class="bg" style="background-image:url('images/06-beach.jpg')"></div>
+  <div class="ov-dark"></div>
+  <div class="content center" style="max-width:1500px">
+    <div class="eyebrow au">Bali · 3 Nights · The Big Choice</div>
+    <div class="headline au" style="font-size:clamp(34px,4.8vw,76px)">Sanur <em>or</em> Canggu?</div>
+    <div class="rule au" style="margin:0 auto 1.5rem"></div>
+    <table class="compare au">
+      <thead><tr><th style="width:20%;color:var(--muted)">Category</th><th class="hl" style="width:40%">🌅 Sanur</th><th class="hl" style="width:40%">🌊 Canggu</th></tr></thead>
+      <tbody>
+        <tr><td class="cat">Vibe</td><td class="hl">Calm, authentic, local. Quiet evenings.</td><td class="hl">Vibrant, surf culture, beach clubs, younger energy.</td></tr>
+        <tr><td class="cat">Beach</td><td class="hl">Sheltered lagoon. Flat water, safe swimming all day.</td><td class="hl">Surf beach. Dramatic but rougher water.</td></tr>
+        <tr><td class="cat">For Laila</td><td class="hl">Relaxed recharge before island life on Gili.</td><td class="hl">More stimulating — surf lessons, beach clubs, exploring.</td></tr>
+        <tr><td class="cat">Food</td><td class="hl">Traditional warungs. Excellent local food.</td><td class="hl">Best restaurant mix in Bali — local to international.</td></tr>
+        <tr><td class="cat">Logistics</td><td class="hl">Fast boat to Gili departs <em>direct</em> from Sanur. <span class="badge">Easier</span></td><td class="hl">Short transfer to Padangbai for Gili boat.</td></tr>
+        <tr><td class="cat">Budget</td><td class="hl">Slightly cheaper. <span class="badge">Better value</span></td><td class="hl">Slightly premium. Worth it for the energy.</td></tr>
+        <tr><td class="cat">Verdict</td><td><div class="verdict">Best for relaxation and easy Gili transfer.</div></td><td><div class="verdict">Best if Laila wants activities — she'll love it.</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SLIDE 07 · SANUR | images/07-sanur-bg.jpg → Sanur beach sunrise, calm lagoon
+     images/07b-puri-santrian.jpg → Puri Santrian resort pool (from puri-santrian.com) -->
+<div class="slide" data-slide="6">
+  <div class="bg" style="background-image:url('images/07-sanur-bg.jpg')"></div>
+  <div class="ov-side"></div><div class="ovb"></div>
+  <div class="content left">
+    <div class="eyebrow au">Option A · Bali Beach · 3 Nights</div>
+    <div class="headline au">Sanur</div>
+    <div class="subhead au">Calm waters, local soul, unhurried days</div>
+    <div class="rule au"></div>
+    <div class="split au">
+      <div class="split-panel">
+        <div class="split-item"><span class="split-icon">✦</span><span class="split-text">Sheltered lagoon — flat, clear water, safe for swimming at any hour</span></div>
+        <div class="split-item"><span class="split-icon">✦</span><span class="split-text">Long beachfront promenade lined with warungs, cafés and local life</span></div>
+        <div class="split-item"><span class="split-icon">✦</span><span class="split-text">Fast boat to Gili Air departs <strong>directly from Sanur</strong> — no extra transfer needed</span></div>
+        <div class="split-item"><span class="split-icon">✦</span><span class="split-text">Authentic Bali feel — Hindu ceremonies, morning offerings, real neighbourhood</span></div>
+        <div class="split-item"><span class="split-icon">✦</span><span class="split-text">Quieter evenings — perfect wind-down between Ubud and Gili island life</span></div>
+      </div>
+      <div class="split-panel featured">
+        <div class="card-label" style="margin-bottom:.8rem">Suggested Stay</div>
+        <div class="split-title">Puri Santrian</div>
+        <div class="split-sub">Beachfront · Private pool bungalows · Garden villas</div>
+        <div class="card-body" style="margin-bottom:1rem">Traditional Balinese resort directly on Sanur beach. Lush tropical gardens, beachside restaurant, beautiful pools. The kind of place you never want to leave.</div>
+        <img src="images/07b-puri-santrian.jpg" alt="Puri Santrian" style="width:100%;border-radius:2px;aspect-ratio:16/9;object-fit:cover" onerror="this.style.display='none'">
+        <div class="card-muted" style="margin-top:.8rem">Also consider: Griya Santrian · Alaya Sanur · Tandjung Sari</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 08 · CANGGU | images/08-canggu-bg.jpg → Canggu Echo Beach sunset or surf
+     images/08b-desa-seni.jpg → Desa Seni pool/villas (from desaseni.com) -->
+<div class="slide" data-slide="7">
+  <div class="bg" style="background-image:url('images/08-canggu-bg.jpg')"></div>
+  <div class="ov-side"></div><div class="ovb"></div>
+  <div class="content left">
+    <div class="eyebrow au">Option B · Bali Beach · 3 Nights</div>
+    <div class="headline au">Canggu</div>
+    <div class="subhead au">Energy, surf, beach clubs and brilliant food</div>
+    <div class="rule au"></div>
+    <div class="split au">
+      <div class="split-panel">
+        <div class="split-item"><span class="split-icon">✦</span><span class="split-text">The Lawn and La Brisa beach clubs — spectacular sunset spots for all ages</span></div>
+        <div class="split-item"><span class="split-icon">✦</span><span class="split-text">Surf lessons on Echo Beach — gentle beginner waves, excellent instructors</span></div>
+        <div class="split-item"><span class="split-icon">✦</span><span class="split-text">Best restaurant scene in Bali — Indonesian street food to wood-fired pizza</span></div>
+        <div class="split-item"><span class="split-icon">✦</span><span class="split-text">Rice paddy walks through the village — Bali's rural soul inside the buzz</span></div>
+        <div class="split-item"><span class="split-icon">✦</span><span class="split-text">More energetic — ideal if Laila wants activities, variety and things to discover</span></div>
+      </div>
+      <div class="split-panel featured">
+        <div class="card-label" style="margin-bottom:.8rem">Suggested Stay</div>
+        <div class="split-title">Desa Seni Village Resort</div>
+        <div class="split-sub">Boutique · Heritage pool villas · Rice paddy views</div>
+        <div class="card-body" style="margin-bottom:1rem">Stunning resort set in a working rice field. Antique Javanese joglo houses, beautiful pool, exceptional restaurant. Walking distance to beach and beach clubs.</div>
+        <img src="images/08b-desa-seni.jpg" alt="Desa Seni" style="width:100%;border-radius:2px;aspect-ratio:16/9;object-fit:cover" onerror="this.style.display='none'">
+        <div class="card-muted" style="margin-top:.8rem">Also consider: The Layar · Katamama · Canggu Club villas</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 09 · GILI AIR | images/09-gili-bg.jpg → Gili Air aerial or turquoise water
+     images/09a-turtle.jpg     → Sea turtle underwater snorkelling
+     images/09b-gili-beach.jpg → Gili Air wooden jetty, clear water
+     images/09c-gili-sunset.jpg → Gili Air sunset over water -->
+<div class="slide" data-slide="8">
+  <div class="bg" style="background-image:url('images/09-gili-bg.jpg')"></div>
+  <div class="ov"></div><div class="ovb"></div>
+  <div class="content center">
+    <div class="eyebrow au">The Island · 4 Nights</div>
+    <div class="headline au">Gili Air</div>
+    <div class="subhead au">No cars. No motorbikes. Just paradise.</div>
+    <div class="rule au" style="margin:0 auto 1.5rem"></div>
+    <div class="photo-cards c3 au" style="margin-bottom:1.2rem">
+      <div class="photo-card" style="aspect-ratio:16/9"><img src="images/09a-turtle.jpg" alt="Sea turtle" onerror="this.parentElement.style.background='#0a1a20'"><div class="photo-card-label">Snorkel with Turtles<div class="photo-card-sub">Wild turtles just metres from the beach</div></div></div>
+      <div class="photo-card" style="aspect-ratio:16/9"><img src="images/09b-gili-beach.jpg" alt="Gili beach" onerror="this.parentElement.style.background='#0a1520'"><div class="photo-card-label">The Beach<div class="photo-card-sub">Crystal clear · 27°C · no crowds</div></div></div>
+      <div class="photo-card" style="aspect-ratio:16/9"><img src="images/09c-gili-sunset.jpg" alt="Gili sunset" onerror="this.parentElement.style.background='#200a00'"><div class="photo-card-label">Island Sunsets<div class="photo-card-sub">Unobstructed horizon every evening</div></div></div>
+    </div>
+    <div class="act-grid au" style="margin-top:0">
+      <div class="act-item"><span class="act-emoji">🚲</span><div class="act-name">Cycle the Island</div><div class="act-desc">45 mins to lap the whole island. No cars, no rush, no noise.</div></div>
+      <div class="act-item"><span class="act-emoji">🤿</span><div class="act-name">Scuba Diving</div><div class="act-desc">World-class diving. Laila can do a PADI discovery dive.</div></div>
+      <div class="act-item"><span class="act-emoji">🏝️</span><div class="act-name">Island Hop</div><div class="act-desc">Day trips to deserted Gili Meno — zero crowds, white sand.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10 · FOOD | images/10-food-bg.jpg → Balinese food spread or warung table
+     images/10a-nasi-goreng.jpg → Nasi goreng with fried egg
+     images/10b-satay.jpg       → Chicken satay skewers with peanut sauce
+     images/10c-seafood.jpg     → Fresh grilled prawns/fish (Gili seafood)
+     images/10d-cafe.jpg        → Ubud/Canggu café with smoothie bowls -->
+<div class="slide" data-slide="9">
+  <div class="bg" style="background-image:url('images/10-food-bg.jpg')"></div>
+  <div class="ov-dark"></div>
+  <div class="content left">
+    <div class="eyebrow au">Food & Dining</div>
+    <div class="headline au" style="font-size:clamp(38px,5.2vw,82px)">Eat Well.<br><em>Spend Little.</em></div>
+    <div class="subhead au">Indonesian cuisine is one of the world's great food cultures</div>
+    <div class="photo-cards c4 au">
+      <div class="photo-card"><img src="images/10a-nasi-goreng.jpg" alt="Nasi Goreng" onerror="this.parentElement.style.background='#201808'"><div class="photo-card-label">Nasi Goreng<div class="photo-card-sub">Indonesia's national dish · from £2</div></div></div>
+      <div class="photo-card"><img src="images/10b-satay.jpg" alt="Satay" onerror="this.parentElement.style.background='#201008'"><div class="photo-card-label">Satay & Babi Guling<div class="photo-card-sub">Charcoal skewers · suckling pig · £3–6</div></div></div>
+      <div class="photo-card"><img src="images/10c-seafood.jpg" alt="Seafood" onerror="this.parentElement.style.background='#081820'"><div class="photo-card-label">Fresh Seafood<div class="photo-card-sub">Off the boat in Gili · full feast £8–15</div></div></div>
+      <div class="photo-card"><img src="images/10d-cafe.jpg" alt="Bali cafe" onerror="this.parentElement.style.background='#101810'"><div class="photo-card-label">Café Culture<div class="photo-card-sub">Smoothie bowls · coffee · all-day brunch</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11 · CULTURE | images/11-culture-bg.jpg → Kecak fire dance / temple ceremony
+     images/11a-kecak.jpg     → Kecak fire dance at Uluwatu temple sunset
+     images/11b-offerings.jpg → Balinese flower and incense offerings on street
+     images/11c-surf.jpg      → Surf lesson Canggu/Kuta, beginner on wave -->
+<div class="slide" data-slide="10">
+  <div class="bg" style="background-image:url('images/11-culture-bg.jpg')"></div>
+  <div class="ov-right"></div><div class="ovb"></div>
+  <div class="content right">
+    <div class="eyebrow au">Culture & Experiences</div>
+    <div class="headline au">Bali <em>is</em><br>unlike<br>anywhere</div>
+    <div class="rule au" style="margin-left:auto"></div>
+    <div class="photo-cards c3 au">
+      <div class="photo-card"><img src="images/11a-kecak.jpg" alt="Kecak dance" onerror="this.parentElement.style.background='#200808'"><div class="photo-card-label">Kecak Fire Dance<div class="photo-card-sub">Uluwatu temple at sunset · unmissable</div></div></div>
+      <div class="photo-card"><img src="images/11b-offerings.jpg" alt="Offerings" onerror="this.parentElement.style.background='#1a1500'"><div class="photo-card-label">Daily Offerings<div class="photo-card-sub">Living Hindu culture — unlike anywhere</div></div></div>
+      <div class="photo-card"><img src="images/11c-surf.jpg" alt="Surf lesson" onerror="this.parentElement.style.background='#081520'"><div class="photo-card-label">Surf Lessons for Laila<div class="photo-card-sub">Canggu · beginner-friendly · safe</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12 · WEATHER | images/12-weather.jpg → Bright blue sky Bali beach or rice terraces -->
+<div class="slide" data-slide="11">
+  <div class="bg" style="background-image:url('images/12-weather.jpg')"></div>
+  <div class="ov"></div><div class="ovb"></div>
+  <div class="content center">
+    <div class="eyebrow au">Weather · Late July & August 2026</div>
+    <div class="headline au">Peak <em>Dry</em><br>Season</div>
+    <div class="subhead au">The best time to be in Bali. No debate.</div>
+    <div class="rule au" style="margin:0 auto 1.5rem"></div>
+    <div class="cards c4 au">
+      <div class="card"><div class="card-big">27–30°</div><div class="card-label">Temperature</div><div class="card-body">Warm, not overwhelming. Sea breeze keeps it comfortable all day.</div></div>
+      <div class="card"><div class="card-big">3–4</div><div class="card-label">Rainy Days / Month</div><div class="card-body">August is Bali's driest month. Any rain falls at night and clears by morning.</div></div>
+      <div class="card"><div class="card-big">11hrs</div><div class="card-label">Daily Sunshine</div><div class="card-body">Clear skies from dawn. Long golden evenings. Maximum outdoor time.</div></div>
+      <div class="card"><div class="card-big">27°C</div><div class="card-label">Sea Temperature</div><div class="card-body">Warm enough for hours in the water. Perfect for snorkelling in Gili.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 13 · COST | images/13-numbers.jpg → Moody Bali aerial or dawn landscape -->
+<div class="slide" data-slide="12">
+  <div class="bg" style="background-image:url('images/13-numbers.jpg')"></div>
+  <div class="ov-dark"></div>
+  <div class="content center">
+    <div class="eyebrow au">The Numbers · 3 People · 16 Nights</div>
+    <div class="headline au" style="font-size:clamp(34px,4.8vw,74px);margin-bottom:1.5rem">What Does<br><em>It Cost?</em></div>
+    <div class="cards c4 au" style="margin-top:0">
+      <div class="card"><span class="card-icon">✈️</span><div class="card-label">Flights</div><div class="card-big" style="font-size:clamp(22px,2.8vw,42px)">£900–1,100<span style="font-size:.4em;color:var(--muted)">pp</span></div><div class="card-muted">Singapore Airlines via SIN · Return</div></div>
+      <div class="card"><span class="card-icon">🏡</span><div class="card-label">Villas & Hotels</div><div class="card-big" style="font-size:clamp(22px,2.8vw,42px)">£700–900<span style="font-size:.4em;color:var(--muted)">pp</span></div><div class="card-muted">Private pool villa incl. breakfast · 16 nights</div></div>
+      <div class="card"><span class="card-icon">🚤</span><div class="card-label">Transfers & Boats</div><div class="card-big" style="font-size:clamp(22px,2.8vw,42px)">£150–200<span style="font-size:.4em;color:var(--muted)">pp</span></div><div class="card-muted">Fast boats, airport transfers, internal</div></div>
+      <div class="card"><span class="card-icon">🍜</span><div class="card-label">Food & Activities</div><div class="card-big" style="font-size:clamp(22px,2.8vw,42px)">£400–600<span style="font-size:.4em;color:var(--muted)">pp</span></div><div class="card-muted">Dining, tours, private driver, excursions</div></div>
+    </div>
+    <div class="card au" style="margin-top:1.4rem;padding:1.8rem 2.5rem;border-color:rgba(201,168,76,.5);display:flex;align-items:center;justify-content:center;gap:3rem;flex-direction:row;flex-wrap:wrap">
+      <div><div class="card-label">Total per person</div><div style="font-family:'Cormorant Garamond',serif;font-size:clamp(38px,5vw,72px);font-weight:300;color:var(--gold);line-height:1">£2,500–2,800</div></div>
+      <div style="width:1px;height:70px;background:rgba(201,168,76,.3)"></div>
+      <div><div class="card-label">Total for the 3 of you</div><div style="font-family:'Cormorant Garamond',serif;font-size:clamp(38px,5vw,72px);font-weight:300;color:var(--cream);line-height:1">£7,500–8,400</div></div>
+      <div style="width:1px;height:70px;background:rgba(201,168,76,.3)"></div>
+      <div><div class="card-label">Depart</div><div style="font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3vw,46px);font-weight:300;color:var(--cream);line-height:1;font-style:italic">Late July 2026</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 14 · DECISION | images/14-close.jpg → Bali golden sunset over ocean -->
+<div class="slide" data-slide="13">
+  <div class="bg" style="background-image:url('images/14-close.jpg')"></div>
+  <div class="ov"></div><div class="ovb"></div>
+  <div class="content center">
+    <div class="eyebrow au">Babar · Gaynor · Laila · Summer 2026</div>
+    <div class="headline au" style="font-size:clamp(42px,7vw,106px)">Are We<br><em>Going?</em></div>
+    <div class="subhead au">Three decisions to make tonight</div>
+    <div class="rule au" style="margin:0 auto 1.5rem"></div>
+    <div class="cards c3 au" style="max-width:1100px">
+      <div class="card"><div class="card-label">Decision 1</div><div class="card-body" style="font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2vw,28px);color:var(--cream);line-height:1.3">Sanur or Canggu?</div><div class="card-muted" style="margin-top:.6rem">Calm & local vs energy & beach clubs</div></div>
+      <div class="card" style="border-color:rgba(201,168,76,.5)"><div class="card-label">Decision 2</div><div class="card-body" style="font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2vw,28px);color:var(--cream);line-height:1.3">Depart 26 July?</div><div class="card-muted" style="margin-top:.6rem">Best value window · home by mid-August</div></div>
+      <div class="card" style="border-color:rgba(201,168,76,.5)"><div class="card-label">Decision 3</div><div class="card-body" style="font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2vw,28px);color:var(--cream);line-height:1.3">Book it.</div><div class="card-muted" style="margin-top:.6rem">August villas sell out. The sooner, the better.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 15 · LINKS | images/15-links.jpg → any calm Bali backdrop (can reuse 01-title.jpg) -->
+<div class="slide" data-slide="14">
+  <div class="bg" style="background-image:url('images/01-title.jpg');filter:brightness(.35)"></div>
+  <div class="ov-dark"></div>
+  <div class="content center" style="max-width:1600px">
+    <div class="eyebrow au">Further Research</div>
+    <div class="headline au" style="font-size:clamp(32px,4.5vw,68px)">Explore <em>&amp; Book</em></div>
+    <div class="rule au" style="margin:0 auto 1rem"></div>
+    <div class="links-grid au">
+      <div class="link-group">
+        <div class="link-group-title">✈️ Flights</div>
+        <div class="link-item"><a href="https://www.singaporeair.com" target="_blank">Singapore Airlines</a><div class="link-desc">LHR → SIN → DPS. Best routing for this trip.</div></div>
+        <div class="link-item"><a href="https://www.cathaypacific.com" target="_blank">Cathay Pacific</a><div class="link-desc">Alternative via Hong Kong. Often competitive.</div></div>
+        <div class="link-item"><a href="https://www.google.com/travel/flights" target="_blank">Google Flights</a><div class="link-desc">Compare both. Set alerts for late July departures.</div></div>
+        <div class="link-item"><a href="https://www.skyscanner.net" target="_blank">Skyscanner</a><div class="link-desc">Flexible date comparison across the July–Aug window.</div></div>
+      </div>
+      <div class="link-group">
+        <div class="link-group-title">🇸🇬 Singapore</div>
+        <div class="link-item"><a href="https://www.gardensbythebay.com.sg" target="_blank">Gardens by the Bay</a><div class="link-desc">Book Supertrees & Cloud Forest tickets in advance.</div></div>
+        <div class="link-item"><a href="https://www.marinabaysands.com" target="_blank">Marina Bay Sands</a><div class="link-desc">SkyPark observation deck. Worth it for the views.</div></div>
+        <div class="link-item"><a href="https://www.visitsingapore.com/see-do-singapore/places-to-eat/hawker-culture/" target="_blank">Singapore Hawker Guide</a><div class="link-desc">Best centres: Maxwell Road, Lau Pa Sat, Newton Circus.</div></div>
+        <div class="link-item"><a href="https://www.booking.com/city/sg/singapore.html" target="_blank">Singapore Hotels</a><div class="link-desc">Search near Marina Bay or Clarke Quay for easy access.</div></div>
+      </div>
+      <div class="link-group">
+        <div class="link-group-title">🌿 Ubud, Bali</div>
+        <div class="link-item"><a href="https://www.thekayonjungleresort.com" target="_blank">The Kayon Jungle Resort</a><div class="link-desc">Valley pool villas. Private, stunning, full jungle.</div></div>
+        <div class="link-item"><a href="https://www.alayacollection.com/ubud" target="_blank">Alaya Resort Ubud</a><div class="link-desc">Boutique villas in the heart of Ubud. Excellent value.</div></div>
+        <div class="link-item"><a href="https://www.airbnb.co.uk/s/Ubud--Bali--Indonesia/homes" target="_blank">Airbnb Ubud Villas</a><div class="link-desc">Filter: Villas with pool. Great family value.</div></div>
+        <div class="link-item"><a href="https://www.tripadvisor.co.uk/Attractions-g297701-Activities-Ubud_Kecamatan_Ubud_Kabupaten_Gianyar_Bali.html" target="_blank">Ubud Top Experiences</a><div class="link-desc">Tegallalang, temples, cooking classes, drivers.</div></div>
+      </div>
+      <div class="link-group">
+        <div class="link-group-title">🌅 Sanur</div>
+        <div class="link-item"><a href="https://www.puri-santrian.com" target="_blank">Puri Santrian Resort</a><div class="link-desc">Our top pick. Beachfront pool bungalows.</div></div>
+        <div class="link-item"><a href="https://www.tandjungsari.com" target="_blank">Tandjung Sari</a><div class="link-desc">Legendary boutique Balinese hotel on the beach.</div></div>
+        <div class="link-item"><a href="https://www.booking.com/city/id/sanur.html" target="_blank">Sanur on Booking.com</a><div class="link-desc">Full villa and resort options. Filter: beachfront, pool.</div></div>
+        <div class="link-item"><a href="https://www.peramaboat.com" target="_blank">Perama Fast Boat → Gili</a><div class="link-desc">Direct Sanur to Gili Air. Book in advance for August.</div></div>
+      </div>
+      <div class="link-group">
+        <div class="link-group-title">🌊 Canggu</div>
+        <div class="link-item"><a href="https://www.desaseni.com" target="_blank">Desa Seni Village Resort</a><div class="link-desc">Our top pick. Heritage villas, rice paddy setting.</div></div>
+        <div class="link-item"><a href="https://thelawnbali.com" target="_blank">The Lawn Beach Club</a><div class="link-desc">Best sunset beach club. Book a bed in advance.</div></div>
+        <div class="link-item"><a href="https://www.labrisa.com" target="_blank">La Brisa Beach Club</a><div class="link-desc">Beautiful driftwood aesthetic. Great food and vibe.</div></div>
+        <div class="link-item"><a href="https://www.booking.com/searchresults.html?ss=canggu" target="_blank">Canggu on Booking.com</a><div class="link-desc">All villa and boutique resort listings for August.</div></div>
+      </div>
+      <div class="link-group">
+        <div class="link-group-title">🏝️ Gili Air</div>
+        <div class="link-item"><a href="https://www.gilibookings.com" target="_blank">Gili Bookings</a><div class="link-desc">Specialist Gili accommodation. Filter: beachfront, pool.</div></div>
+        <div class="link-item"><a href="https://www.booking.com/island/id/gili-air.html" target="_blank">Gili Air Hotels</a><div class="link-desc">Best picks: Aston Sunset Beach, Gili Air Sanctuary.</div></div>
+        <div class="link-item"><a href="https://www.giliislands.com/diving" target="_blank">Gili Diving Guide</a><div class="link-desc">PADI courses and discovery dives. Blue Marlin Dive.</div></div>
+        <div class="link-item"><a href="https://www.gilibookings.com/gili-air-fast-boat" target="_blank">Fast Boat Transfers</a><div class="link-desc">Bali → Gili Air. ~2hrs. Book ahead for August.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div id="nav"></div>
+<div id="slide-num">01 / 15</div>
+<div id="hint">← → Navigate · Space = Auto-play · Esc = Start over</div>
+
+<script>
+const slides=document.querySelectorAll('.slide'),total=slides.length;
+let current=0,playing=false,timer=null;
+const nav=document.getElementById('nav'),numEl=document.getElementById('slide-num'),prog=document.getElementById('progress');
+slides.forEach((_,i)=>{const d=document.createElement('button');d.className='dot'+(i===0?' active':'');d.addEventListener('click',()=>goTo(i));nav.appendChild(d);});
+function goTo(n){slides[current].classList.remove('active');nav.querySelectorAll('.dot')[current].classList.remove('active');current=((n%total)+total)%total;slides[current].classList.add('active');nav.querySelectorAll('.dot')[current].classList.add('active');numEl.textContent=String(current+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');prog.style.width=((current+1)/total*100)+'%';}
+function next(){goTo(current+1);}function prev(){goTo(current-1);}
+function startPlay(){playing=true;clearInterval(timer);timer=setInterval(next,6000);document.getElementById('hint').textContent='← → Navigate · Space = Pause · Esc = Start over';}
+function stopPlay(){playing=false;clearInterval(timer);document.getElementById('hint').textContent='← → Navigate · Space = Auto-play · Esc = Start over';}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='ArrowDown'){stopPlay();next();}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){stopPlay();prev();}else if(e.key===' '){e.preventDefault();playing?stopPlay():startPlay();}else if(e.key==='Escape'){stopPlay();goTo(0);}});
+let tx=null;document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});document.addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50){stopPlay();dx<0?next():prev();}tx=null;});
+goTo(0);prog.style.width=(1/total*100)+'%';
+</script>
+</body>
+</html>
