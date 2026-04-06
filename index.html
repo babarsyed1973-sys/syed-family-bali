@@ -8,6 +8,8 @@
 <title>The Syed Family Adventure · Bali & Gili · Summer 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <style>
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 :root {
@@ -288,271 +290,160 @@ body { width:100%; height:100%; height:-webkit-fill-available; min-height:-webki
 </div>
 
 <!-- SLIDE 06 · TRAVEL MAP -->
-<div class="slide" data-slide="5">
+<div class="slide" data-slide="5" id="slide-map">
   <div class="bg" style="background-image:url('01-title.jpg');filter:brightness(.06)"></div>
-  <div class="ov-dark" style="background:rgba(4,8,18,.75)"></div>
-  <style>
-    @keyframes boatDash  { to { stroke-dashoffset: -26; } }
-    @keyframes pinRing   { 0%,100%{r:18;opacity:.18} 50%{r:26;opacity:.05} }
-    @keyframes fadeInMap { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-    .boat-line { animation: boatDash 1.6s linear infinite; }
-    .gili-ring  { animation: pinRing  2.6s ease-in-out infinite; }
-    .map-panel  { animation: fadeInMap .9s ease both; }
-    .map-panel:nth-child(2){ animation-delay:.18s }
-  </style>
-  <div class="content center" style="max-width:1750px;padding:0 2.5%">
-    <div class="eyebrow au" style="margin-bottom:.5rem">The Journey · 24 July – 9 August 2026</div>
-    <div style="display:grid;grid-template-columns:1fr 1.45fr;gap:1.2rem;width:100%;height:82vh;max-height:700px" class="au">
+  <div class="ov-dark" style="background:rgba(4,8,18,.82)"></div>
+  <div class="content center" style="max-width:1700px;padding:0 2.5%;justify-content:center">
+    <div class="eyebrow au" style="margin-bottom:.4rem">The Journey · 24 July – 9 August 2026</div>
+    <div class="headline au" style="font-size:clamp(26px,3.6vw,54px);margin-bottom:.6rem">Getting <em>There</em></div>
 
-      <!-- LEFT PANEL: Regional overview -->
-      <div class="map-panel" style="background:#050d18;border:1px solid rgba(201,168,76,.14);border-radius:4px;overflow:hidden;position:relative">
-        <div style="position:absolute;top:11px;left:14px;font-family:'Jost',sans-serif;font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:rgba(201,168,76,.45);z-index:2">Regional Overview</div>
-        <svg viewBox="0 0 280 470" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
-          <defs>
-            <radialGradient id="rg-sg" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".45"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></radialGradient>
-            <radialGradient id="rg-ba" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".38"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></radialGradient>
-            <radialGradient id="rg-gi" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#4fc3d4" stop-opacity=".42"/><stop offset="100%" stop-color="#4fc3d4" stop-opacity="0"/></radialGradient>
-            <radialGradient id="ocean-r" cx="42%" cy="55%" r="65%"><stop offset="0%" stop-color="#0c1e32"/><stop offset="100%" stop-color="#040c16"/></radialGradient>
-            <filter id="blur-r"><feGaussianBlur stdDeviation="4"/></filter>
-            <marker id="fl-a" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#C9A84C" opacity=".85"/></marker>
-            <marker id="bt-a" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#4fc3d4"/></marker>
-          </defs>
-          <rect width="280" height="470" fill="url(#ocean-r)"/>
-          <!-- ocean shimmer -->
-          <g opacity=".04" stroke="#6ab0d4" stroke-width=".5" fill="none">
-            <path d="M0,380 Q70,370 140,380 Q210,390 280,380"/><path d="M0,400 Q70,392 140,400 Q210,408 280,400"/>
-            <path d="M0,420 Q70,413 140,420 Q210,427 280,420"/>
-          </g>
-          <!-- Malay Peninsula -->
-          <path d="M162,0 L168,20 L164,45 L158,72 L150,102 L142,132 L136,158 L130,178 L124,195 L118,208 L178,0 Z" fill="#162d1a" stroke="#1f3d22" stroke-width=".6"/>
-          <path d="M162,0 L168,20 L164,45 L158,72 L150,102 L142,132 L136,158 L130,178 L124,195 L118,208" stroke="#1f3d22" stroke-width="18" fill="none" stroke-linecap="round"/>
-          <path d="M162,0 L168,20 L164,45 L158,72 L150,102 L142,132 L136,158 L130,178 L124,195 L118,208" stroke="#162d1a" stroke-width="14" fill="none" stroke-linecap="round"/>
-          <!-- Sumatra -->
-          <path d="M0,58 L22,48 L55,46 L88,52 L115,64 L136,82 L146,108 L142,138 L128,160 L106,174 L80,178 L52,168 L28,150 L8,126 L0,98 Z" fill="#162d1a" stroke="#1f3d22" stroke-width=".7"/>
-          <text x="52" y="112" font-family="Jost,sans-serif" font-size="7" fill="#253d28" transform="rotate(-14,52,112)" letter-spacing=".4">SUMATRA</text>
-          <!-- Borneo partial -->
-          <path d="M252,0 L280,10 L280,78 L268,96 L252,80 L244,48 L244,18 Z" fill="#162d1a" stroke="#1f3d22" stroke-width=".6"/>
-          <!-- Java -->
-          <path d="M28,348 L68,335 L112,329 L155,331 L188,338 L215,348 L228,360 L220,370 L190,374 L148,370 L100,366 L58,362 L30,356 Z" fill="#162d1a" stroke="#1f3d22" stroke-width=".7"/>
-          <text x="122" y="356" font-family="Jost,sans-serif" font-size="7" fill="#253d28" letter-spacing=".4">JAVA</text>
-          <!-- Bali highlighted -->
-          <ellipse cx="216" cy="386" rx="14" ry="9" fill="#1e3d22" stroke="#3a6640" stroke-width="1.3"/>
-          <!-- Lombok -->
-          <ellipse cx="238" cy="384" rx="8" ry="6" fill="#162d1a" stroke="#1f3d22" stroke-width=".6"/>
-          <!-- Gili dots -->
-          <circle cx="234" cy="376" r="2.5" fill="#162d1a" stroke="#2a4a2e" stroke-width=".6"/>
-          <!-- Singapore -->
-          <ellipse cx="118" cy="208" rx="9" ry="5" fill="#1e3d22" stroke="#3a6640" stroke-width="1"/>
-          <!-- ROUTES -->
-          <path d="M138,0 Q132,80 118,208" stroke="#C9A84C" stroke-width="1.8" fill="none" stroke-dasharray="7,5" opacity=".72" marker-end="url(#fl-a)"/>
-          <path d="M118,208 Q166,296 216,382" stroke="#C9A84C" stroke-width="1.8" fill="none" stroke-dasharray="7,5" opacity=".72" marker-end="url(#fl-a)"/>
-          <path d="M218,383 Q225,378 232,376" stroke="#4fc3d4" stroke-width="2.8" fill="none" stroke-dasharray="6,4" opacity="1" marker-end="url(#bt-a)" class="boat-line"/>
-          <!-- PINS -->
-          <!-- London -->
-          <text x="88" y="15" font-family="Jost,sans-serif" font-size="8" fill="#9a8a6a" letter-spacing=".6">LONDON ✈</text>
-          <line x1="118" y1="15" x2="136" y2="8" stroke="#9a8a6a" stroke-width=".6" opacity=".5"/>
-          <!-- Singapore pin -->
-          <circle cx="118" cy="208" r="28" fill="url(#rg-sg)" filter="url(#blur-r)"/>
-          <circle cx="118" cy="208" r="7" fill="#C9A84C" opacity=".95"/>
-          <circle cx="118" cy="208" r="11" fill="none" stroke="#C9A84C" stroke-width="1" opacity=".4"/>
-          <rect x="130" y="198" width="86" height="26" rx="3" fill="rgba(5,13,24,.88)" stroke="rgba(201,168,76,.3)" stroke-width=".8"/>
-          <text x="138" y="209" font-family="Jost,sans-serif" font-size="8.5" font-weight="500" fill="#E8CC7A" letter-spacing=".8">SINGAPORE</text>
-          <text x="138" y="220" font-family="Jost,sans-serif" font-size="7" fill="#9a8a6a">2 nights · 25–26 Jul</text>
-          <!-- Bali pin -->
-          <circle cx="216" cy="384" r="24" fill="url(#rg-ba)" filter="url(#blur-r)"/>
-          <circle cx="216" cy="384" r="6" fill="#C9A84C" opacity=".95"/>
-          <circle cx="216" cy="384" r="10" fill="none" stroke="#C9A84C" stroke-width="1" opacity=".4"/>
-          <rect x="136" y="365" width="74" height="26" rx="3" fill="rgba(5,13,24,.88)" stroke="rgba(201,168,76,.3)" stroke-width=".8"/>
-          <text x="144" y="376" font-family="Jost,sans-serif" font-size="8.5" font-weight="500" fill="#E8CC7A" letter-spacing=".8">BALI</text>
-          <text x="144" y="387" font-family="Jost,sans-serif" font-size="7" fill="#9a8a6a">7 nights total</text>
-          <!-- Gili pin -->
-          <circle cx="234" cy="376" r="20" fill="url(#rg-gi)" filter="url(#blur-r)"/>
-          <circle cx="234" cy="376" r="5" fill="#4fc3d4" opacity=".95"/>
-          <circle cx="234" cy="376" r="9" fill="none" stroke="#4fc3d4" stroke-width="1" opacity=".45"/>
-          <rect x="216" y="356" width="60" height="14" rx="3" fill="rgba(5,13,24,.88)" stroke="rgba(79,195,212,.3)" stroke-width=".7"/>
-          <text x="246" y="366" font-family="Jost,sans-serif" font-size="7" fill="#7ee8f4" text-anchor="middle" letter-spacing=".4">GILI AIR</text>
-          <!-- Legend -->
-          <rect x="0" y="440" width="280" height="30" fill="rgba(4,10,20,.8)"/>
-          <line x1="12" y1="455" x2="34" y2="455" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="5,3"/>
-          <text x="38" y="458" font-family="Jost,sans-serif" font-size="7" fill="#9a8a6a">Flight</text>
-          <line x1="80" y1="455" x2="102" y2="455" stroke="#4fc3d4" stroke-width="2" stroke-dasharray="5,3"/>
-          <text x="106" y="458" font-family="Jost,sans-serif" font-size="7" fill="#9a8a6a">Fast boat</text>
-          <text x="165" y="458" font-family="Jost,sans-serif" font-size="7" fill="#6a7a8a">LHR→SIN ~13 hrs · SIN→DPS ~2.5 hrs</text>
-        </svg>
+    <!-- Legend -->
+    <div class="au" style="display:flex;gap:1.8rem;justify-content:center;margin-bottom:.7rem;flex-wrap:wrap">
+      <span style="font-family:'Jost',sans-serif;font-size:clamp(10px,1.1vw,13px);color:var(--muted);display:flex;align-items:center;gap:.5rem">
+        <span style="display:inline-block;width:26px;height:0;border-top:2px dashed #C9A84C"></span>Flight
+      </span>
+      <span style="font-family:'Jost',sans-serif;font-size:clamp(10px,1.1vw,13px);color:var(--muted);display:flex;align-items:center;gap:.5rem">
+        <span style="display:inline-block;width:26px;height:0;border-top:2px solid #E8CC7A"></span>Road transfer
+      </span>
+      <span style="font-family:'Jost',sans-serif;font-size:clamp(10px,1.1vw,13px);color:#4fc3d4;display:flex;align-items:center;gap:.5rem">
+        <span style="display:inline-block;width:26px;height:0;border-top:2px dashed #4fc3d4"></span>Fast boat · <strong>Book now</strong>
+      </span>
+    </div>
+
+    <!-- Map -->
+    <div class="au" style="width:100%">
+      <div id="holidayMap" style="height:clamp(300px,50vh,520px);width:100%;border-radius:8px;border:1px solid rgba(201,168,76,.22);overflow:hidden"></div>
+    </div>
+
+    <!-- Journey steps -->
+    <div class="au" style="display:grid;grid-template-columns:repeat(5,1fr);gap:.55rem;margin-top:.75rem;width:100%">
+      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:3px;padding:.65rem .8rem;text-align:center">
+        <div style="font-size:clamp(7px,.8vw,10px);letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem">LHR → SIN</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.9vw,26px);color:var(--cream)">~13 hrs</div>
+        <div style="font-size:clamp(9px,.85vw,11px);color:var(--muted)">Singapore Airlines</div>
       </div>
-
-      <!-- RIGHT PANEL: Bali detail inset -->
-      <div class="map-panel" style="background:#050d18;border:1px solid rgba(201,168,76,.14);border-radius:4px;overflow:hidden;position:relative">
-        <div style="position:absolute;top:11px;left:14px;font-family:'Jost',sans-serif;font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:rgba(201,168,76,.45);z-index:2">Bali &amp; Gili Air · Detail</div>
-        <svg viewBox="0 0 420 360" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
-          <defs>
-            <radialGradient id="rg-ubud" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".55"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></radialGradient>
-            <radialGradient id="rg-sanur" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#C9A84C" stop-opacity=".48"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></radialGradient>
-            <radialGradient id="rg-gili2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#4fc3d4" stop-opacity=".55"/><stop offset="100%" stop-color="#4fc3d4" stop-opacity="0"/></radialGradient>
-            <radialGradient id="ocean-d" cx="60%" cy="40%" r="70%"><stop offset="0%" stop-color="#0c2030"/><stop offset="100%" stop-color="#040c18"/></radialGradient>
-            <filter id="blur-d"><feGaussianBlur stdDeviation="5"/></filter>
-            <filter id="blur-d2"><feGaussianBlur stdDeviation="2"/></filter>
-            <marker id="rd-a" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto"><path d="M0,0 L6,2.5 L0,5 Z" fill="#E8CC7A" opacity=".9"/></marker>
-            <marker id="bt-a2" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#4fc3d4"/></marker>
-          </defs>
-
-          <rect width="420" height="360" fill="url(#ocean-d)"/>
-          <!-- ocean shimmer -->
-          <g opacity=".05" stroke="#5a9ab8" stroke-width=".6" fill="none">
-            <path d="M180,200 Q280,188 380,200 Q420,205 420,205"/><path d="M180,220 Q280,210 380,222 Q420,226 420,226"/>
-            <path d="M0,250 Q60,244 120,250"/><path d="M0,270 Q60,265 120,270"/>
-          </g>
-
-          <!-- ═══ BALI ISLAND — accurate elongated shape ═══ -->
-          <!-- Scale: ~145px per degree. Origin pin: 114.35°E = x15, 7.88°S = y18 -->
-          <!-- x = (lon-114.35)*145 + 15 ; y = (lat-7.88)*145 + 18 -->
-          <!-- W tip (114.4,8.2): x=22, y=64 -->
-          <!-- Airport (115.17,8.75): x=134, y=144 -->
-          <!-- Ubud (115.27,8.52): x=148, y=111 -->
-          <!-- Sanur (115.26,8.70): x=147, y=137 -->
-          <!-- E tip (115.71,8.44): x=213, y=104 -->
-          <!-- N coast peaks around y=24-44 -->
-          <!-- S Bukit peninsula dips to y=168 -->
-          
-          <!-- Island fill with mountain tint -->
-          <path d="
-            M 22,64
-            C 32,44 55,30 85,22
-            C 112,16 140,16 162,20
-            C 182,24 198,32 210,44
-            C 220,56 220,72 212,86
-            C 206,96 195,104 180,110
-            C 168,114 158,112 148,111
-            C 144,120 142,132 140,144
-            C 138,154 132,163 122,169
-            C 112,175 100,174 90,168
-            C 78,160 72,148 68,136
-            C 58,138 46,132 34,120
-            C 22,108 16,92 18,76
-            Z
-          " fill="#1a3a1e" stroke="#2d5532" stroke-width="1.8"/>
-
-          <!-- Bukit Peninsula southern bulge -->
-          <path d="M 68,136 C 72,152 80,164 92,170 C 104,176 116,174 126,166 C 134,160 138,150 140,144"
-                fill="#1a3a1e" stroke="#2d5532" stroke-width="1.2"/>
-
-          <!-- Mountain ridge across north — gives the island depth -->
-          <path d="M 38,60 L 62,46 L 92,36 L 128,30 L 158,34 L 180,44 L 200,58"
-                stroke="#243f28" stroke-width="9" fill="none" stroke-linecap="round" opacity=".7"/>
-          <path d="M 38,60 L 62,46 L 92,36 L 128,30 L 158,34 L 180,44 L 200,58"
-                stroke="#1e3822" stroke-width="5" fill="none" stroke-linecap="round" opacity=".9"/>
-
-          <!-- Mt Agung peak marker -->
-          <polygon points="172,24 180,42 164,42" fill="#263e2a" opacity=".8"/>
-          <text x="182" y="26" font-family="Jost,sans-serif" font-size="6.5" fill="#4a6a4e">▲ Mt Agung</text>
-
-          <!-- BALI island label -->
-          <text x="100" y="76" font-family="Jost,sans-serif" font-size="13" font-weight="300" fill="#2e5232" letter-spacing="4" text-anchor="middle" opacity=".75">BALI</text>
-
-          <!-- ═══ LOMBOK ═══ -->
-          <!-- Lombok centre ~116.32°E, 8.55°S → x=282, y=148 -->
-          <path d="M 258,92 C 272,82 288,82 298,92 C 310,104 312,122 306,138 C 300,154 286,164 270,164 C 254,164 242,154 238,140 C 234,126 238,110 248,100 Z"
-                fill="#162d1a" stroke="#203828" stroke-width="1.2"/>
-          <!-- Mt Rinjani hint -->
-          <polygon points="270,95 278,112 262,112" fill="#1a3020" opacity=".7"/>
-          <text x="270" y="92" font-family="Jost,sans-serif" font-size="6" fill="#3a5040" text-anchor="middle">▲ Rinjani</text>
-          <text x="270" y="138" font-family="Jost,sans-serif" font-size="8.5" fill="#2a4630" text-anchor="middle" letter-spacing="1">LOMBOK</text>
-
-          <!-- ═══ GILI ISLANDS cluster ═══ -->
-          <!-- Gili T (116.02,8.35)→x=240,y=69; Gili Meno(116.07,8.36)→x=247,y=70; Gili Air(116.1,8.38)→x=252,y=73 -->
-          <circle cx="236" cy="70" r="6" fill="#162d1a" stroke="#2a4430" stroke-width="1"/>
-          <circle cx="248" cy="66" r="5" fill="#162d1a" stroke="#2a4430" stroke-width="1"/>
-          <circle cx="258" cy="73" r="5.5" fill="#162d1a" stroke="#2a4430" stroke-width="1.2"/>
-          <!-- Small island labels -->
-          <text x="230" y="62" font-family="Jost,sans-serif" font-size="6" fill="#3a5040" text-anchor="middle">T</text>
-          <text x="248" y="58" font-family="Jost,sans-serif" font-size="6" fill="#3a5040" text-anchor="middle">Meno</text>
-          <text x="264" y="66" font-family="Jost,sans-serif" font-size="6" fill="#3a5040" text-anchor="middle">Air</text>
-
-          <!-- ═══ AIRPORT MARKER ═══ -->
-          <circle cx="134" cy="144" r="7" fill="#0a1828" stroke="#3a5060" stroke-width="1.2"/>
-          <text x="134" y="148" font-family="Jost,sans-serif" font-size="8" fill="#5a7a90" text-anchor="middle">✈</text>
-          <rect x="86" y="152" width="44" height="12" rx="2" fill="rgba(5,13,24,.9)" stroke="rgba(80,120,150,.25)" stroke-width=".6"/>
-          <text x="108" y="161" font-family="Jost,sans-serif" font-size="6.5" fill="#5a7a8a" text-anchor="middle" letter-spacing=".3">DPS AIRPORT</text>
-
-          <!-- ═══ ROUTES ═══ -->
-
-          <!-- Airport → Ubud road (solid amber) -->
-          <path d="M 136,137 C 138,126 140,118 148,111"
-                stroke="#E8CC7A" stroke-width="2.2" fill="none" opacity=".85" stroke-linecap="round" marker-end="url(#rd-a)"/>
-
-          <!-- Ubud → Sanur road (dashed amber - short hop south) -->
-          <path d="M 148,114 C 148,122 147,130 147,137"
-                stroke="#E8CC7A" stroke-width="2.2" fill="none" opacity=".85" stroke-dasharray="5,3" stroke-linecap="round" marker-end="url(#rd-a)"/>
-
-          <!-- Road duration label -->
-          <rect x="54" y="118" width="58" height="14" rx="3" fill="rgba(5,13,24,.88)" stroke="rgba(232,204,122,.2)" stroke-width=".6"/>
-          <text x="83" y="128" font-family="Jost,sans-serif" font-size="7.5" fill="#9a8a6a" text-anchor="middle">🚗 ~1.5 hrs each</text>
-
-          <!-- Sanur → Gili Air boat route (animated aqua) -->
-          <!-- Sanur harbour ~x=152, y=142 ; Gili Air x=258, y=73 -->
-          <path d="M 155,140 C 188,120 218,98 256,74"
-                stroke="#4fc3d4" stroke-width="3.5" fill="none" stroke-dasharray="9,6" opacity=".22"/>
-          <path d="M 155,140 C 188,120 218,98 256,74"
-                stroke="#4fc3d4" stroke-width="3.5" fill="none" stroke-dasharray="9,6" opacity="1" marker-end="url(#bt-a2)" class="boat-line"/>
-          <!-- Boat time label along route -->
-          <text x="202" y="100" font-family="Jost,sans-serif" font-size="8" fill="#4fc3d4" opacity=".75" transform="rotate(-30,202,100)">~ 2 hrs</text>
-
-          <!-- Sanur harbour anchor -->
-          <text x="158" y="154" font-family="Jost,sans-serif" font-size="11" fill="#4fc3d4" opacity=".7">⚓</text>
-
-          <!-- ═══ DESTINATION PINS ═══ -->
-
-          <!-- UBUD -->
-          <circle cx="148" cy="111" r="36" fill="url(#rg-ubud)" filter="url(#blur-d)"/>
-          <circle cx="148" cy="111" r="9" fill="#C9A84C" opacity=".96"/>
-          <circle cx="148" cy="111" r="14" fill="none" stroke="#C9A84C" stroke-width="1.3" opacity=".45"/>
-          <circle cx="148" cy="111" r="21" fill="none" stroke="#C9A84C" stroke-width=".6" opacity=".2"/>
-          <!-- Label pill -->
-          <rect x="165" y="94" width="112" height="34" rx="4" fill="rgba(5,13,24,.94)" stroke="rgba(201,168,76,.45)" stroke-width="1.1"/>
-          <text x="176" y="107" font-family="Jost,sans-serif" font-size="10" font-weight="500" fill="#E8CC7A" letter-spacing="1.2">UBUD</text>
-          <text x="176" y="120" font-family="Jost,sans-serif" font-size="7.5" fill="#9a8a6a">3 nights · 27–29 Jul</text>
-          <!-- connector dot -->
-          <line x1="165" y1="111" x2="157" y2="111" stroke="rgba(201,168,76,.35)" stroke-width=".8"/>
-
-          <!-- SANUR -->
-          <circle cx="148" cy="140" r="32" fill="url(#rg-sanur)" filter="url(#blur-d)"/>
-          <circle cx="148" cy="140" r="8" fill="#C9A84C" opacity=".96"/>
-          <circle cx="148" cy="140" r="13" fill="none" stroke="#C9A84C" stroke-width="1.3" opacity=".45"/>
-          <circle cx="148" cy="140" r="20" fill="none" stroke="#C9A84C" stroke-width=".6" opacity=".2"/>
-          <!-- Label pill -->
-          <rect x="165" y="125" width="128" height="34" rx="4" fill="rgba(5,13,24,.94)" stroke="rgba(201,168,76,.45)" stroke-width="1.1"/>
-          <text x="176" y="138" font-family="Jost,sans-serif" font-size="10" font-weight="500" fill="#E8CC7A" letter-spacing="1.2">SANUR</text>
-          <text x="176" y="151" font-family="Jost,sans-serif" font-size="7.5" fill="#9a8a6a">4 nights · 30 Jul–2 Aug</text>
-          <line x1="165" y1="140" x2="156" y2="140" stroke="rgba(201,168,76,.35)" stroke-width=".8"/>
-
-          <!-- GILI AIR -->
-          <circle cx="258" cy="73" r="36" fill="url(#rg-gili2)" filter="url(#blur-d)"/>
-          <circle cx="258" cy="73" r="9" fill="#4fc3d4" opacity=".96"/>
-          <circle cx="258" cy="73" r="14" fill="none" stroke="#4fc3d4" stroke-width="1.3" opacity=".5"/>
-          <circle cx="258" cy="73" r="22" fill="none" stroke="#4fc3d4" stroke-width=".6" opacity=".2"/>
-          <!-- Animated outer pulse ring -->
-          <circle cx="258" cy="73" r="18" fill="none" stroke="#4fc3d4" stroke-width="1.2" opacity=".22" class="gili-ring"/>
-          <!-- Label pill — positioned above to keep clear of Lombok -->
-          <rect x="288" y="28" width="128" height="34" rx="4" fill="rgba(5,13,24,.94)" stroke="rgba(79,195,212,.45)" stroke-width="1.1"/>
-          <text x="298" y="41" font-family="Jost,sans-serif" font-size="10" font-weight="500" fill="#7ee8f4" letter-spacing="1.2">GILI AIR</text>
-          <text x="298" y="54" font-family="Jost,sans-serif" font-size="7.5" fill="#9a8a6a">5 nights · 3–7 Aug</text>
-          <!-- connector line -->
-          <line x1="288" y1="45" x2="268" y2="68" stroke="rgba(79,195,212,.3)" stroke-width=".8"/>
-
-          <!-- ═══ LEGEND STRIP ═══ -->
-          <rect x="0" y="326" width="420" height="34" fill="rgba(4,10,20,.88)"/>
-          <line x1="14" y1="343" x2="40" y2="343" stroke="#C9A84C" stroke-width="1.5" stroke-dasharray="6,4"/>
-          <text x="44" y="346" font-family="Jost,sans-serif" font-size="7.5" fill="#9a8a6a">Flight (Singapore Airlines)</text>
-          <line x1="172" y1="343" x2="198" y2="343" stroke="#E8CC7A" stroke-width="2"/>
-          <text x="202" y="346" font-family="Jost,sans-serif" font-size="7.5" fill="#9a8a6a">Road · private driver</text>
-          <line x1="300" y1="343" x2="326" y2="343" stroke="#4fc3d4" stroke-width="2.2" stroke-dasharray="6,3"/>
-          <text x="330" y="346" font-family="Jost,sans-serif" font-size="7.5" fill="#4fc3d4">Fast boat ⚠ Book now</text>
-        </svg>
+      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:3px;padding:.65rem .8rem;text-align:center">
+        <div style="font-size:clamp(7px,.8vw,10px);letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem">SIN → DPS</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.9vw,26px);color:var(--cream)">~2.5 hrs</div>
+        <div style="font-size:clamp(9px,.85vw,11px);color:var(--muted)">Singapore Airlines · 27 Jul</div>
       </div>
-
+      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:3px;padding:.65rem .8rem;text-align:center">
+        <div style="font-size:clamp(7px,.8vw,10px);letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem">DPS → Ubud</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.9vw,26px);color:var(--cream)">~1.5 hrs</div>
+        <div style="font-size:clamp(9px,.85vw,11px);color:var(--muted)">Private driver · 27 Jul</div>
+      </div>
+      <div style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:3px;padding:.65rem .8rem;text-align:center">
+        <div style="font-size:clamp(7px,.8vw,10px);letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:.3rem">Ubud → Sanur</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.9vw,26px);color:var(--cream)">~1.5 hrs</div>
+        <div style="font-size:clamp(9px,.85vw,11px);color:var(--muted)">Private driver · 30 Jul</div>
+      </div>
+      <div style="background:var(--card-bg);border:1px solid rgba(79,195,212,.3);border-radius:3px;padding:.65rem .8rem;text-align:center">
+        <div style="font-size:clamp(7px,.8vw,10px);letter-spacing:.2em;text-transform:uppercase;color:#4fc3d4;margin-bottom:.3rem">Sanur → Gili Air</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(15px,1.9vw,26px);color:#4fc3d4">~2 hrs</div>
+        <div style="font-size:clamp(9px,.85vw,11px);color:var(--muted)">Fast boat · 3 Aug · ⚠ Book now</div>
+      </div>
     </div>
   </div>
 </div>
+
+<style>
+  #holidayMap .leaflet-tile-pane { filter:brightness(.9) saturate(.8); }
+  #holidayMap .leaflet-popup-content-wrapper {
+    background:rgba(10,14,22,.97);color:#ede8dc;
+    border:1px solid rgba(201,168,76,.28);border-radius:6px;
+    box-shadow:0 8px 32px rgba(0,0,0,.65);padding:0;
+  }
+  #holidayMap .leaflet-popup-content { margin:0;padding:0;min-width:230px; }
+  #holidayMap .leaflet-popup-tip-container { display:none; }
+  #holidayMap .leaflet-popup-close-button { color:#9a8a6a!important;top:6px!important;right:8px!important;font-size:16px!important; }
+  #holidayMap .leaflet-control-zoom a { background:rgba(10,14,22,.92)!important;color:#C9A84C!important;border-color:rgba(201,168,76,.2)!important; }
+  #holidayMap .leaflet-control-attribution { background:rgba(10,14,22,.7)!important;color:rgba(237,232,220,.25)!important;font-size:9px; }
+  #holidayMap .leaflet-control-attribution a { color:rgba(201,168,76,.4)!important; }
+  .sp-inner { padding:14px 16px 12px; }
+  .sp-inner h3 { margin:0 0 3px;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:19px;color:#C9A84C;line-height:1.2; }
+  .sp-inner .sp-meta { font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:rgba(237,232,220,.38);margin-bottom:7px; }
+  .sp-inner p { margin:0;font-family:'Jost',sans-serif;font-size:12px;font-weight:300;color:rgba(237,232,220,.72);line-height:1.55; }
+  .sp-img { width:100%;display:block;border-radius:0 0 5px 5px;margin-top:10px;height:115px;object-fit:cover; }
+</style>
+
+<script>
+(function(){
+  var MAP_SLIDE = 5;
+  var syed_map  = null;
+
+  function buildMap() {
+    if (syed_map) { syed_map.invalidateSize(); return; }
+
+    syed_map = L.map('holidayMap', {
+      scrollWheelZoom: false,
+      zoomControl: true
+    }).setView([20, 80], 3);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO',
+      subdomains: 'abcd', maxZoom: 19
+    }).addTo(syed_map);
+
+    function pin(color) {
+      return L.divIcon({
+        className: '',
+        html: '<div style="width:13px;height:13px;border-radius:50%;background:' + color + ';border:2px solid rgba(255,255,255,.2);box-shadow:0 0 0 4px ' + color + '44;filter:drop-shadow(0 2px 6px rgba(0,0,0,.7))"></div>',
+        iconSize:[13,13], iconAnchor:[6,6], popupAnchor:[0,-10]
+      });
+    }
+
+    var gold = pin('#C9A84C'), aqua = pin('#4fc3d4');
+
+    var stops = [
+      { name:"London Heathrow", meta:"Departure · 24 July 2026 (evening)",
+        coords:[51.470,-0.454],
+        info:"The adventure begins. Singapore Airlines departs Heathrow — arrive Singapore next morning.",
+        img:"https://images.unsplash.com/photo-1543716627-839b54c40519?auto=format&fit=crop&w=400&q=75", icon:gold },
+      { name:"Singapore", meta:"2 nights · 25–26 July",
+        coords:[1.364,103.991],
+        info:"Supertrees at Gardens by the Bay, Maxwell Road hawker centre, Marina Bay Sands SkyPark observation deck.",
+        img:"https://images.unsplash.com/photo-1525625239917-4bbdffec0984?auto=format&fit=crop&w=400&q=75", icon:gold },
+      { name:"Ubud, Bali", meta:"3 nights · 27–29 July",
+        coords:[-8.507,115.263],
+        info:"Tirta Empul water blessing, Tegallalang rice terraces, Campuhan Ridge Walk at sunrise, Kecak fire dance.",
+        img:"https://images.unsplash.com/photo-1559628233-eb1b1a45564b?auto=format&fit=crop&w=400&q=75", icon:gold },
+      { name:"Sanur, Bali", meta:"4 nights · 30 Jul – 2 Aug",
+        coords:[-8.707,115.262],
+        info:"Puri Santrian resort on the beach. Lagoon swimming, 8km promenade, Sindhu Night Market, Nusa Penida day trip.",
+        img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&q=75", icon:gold },
+      { name:"Gili Air", meta:"5 nights · 3–7 August",
+        coords:[-8.364,116.083],
+        info:"No cars. Wild sea turtles. PADI discovery dive for Laila. Cycling the island. Outdoor movies on the beach.",
+        img:"https://images.unsplash.com/photo-1510014807280-eb5fa103c20c?auto=format&fit=crop&w=400&q=75", icon:aqua }
+    ];
+
+    var pts = stops.map(function(s){ return s.coords; });
+
+    // Flight route (dashed gold)
+    L.polyline([pts[0],pts[1],pts[2]], {color:'#C9A84C',weight:2,opacity:.65,dashArray:'9 11'}).addTo(syed_map);
+    // Road transfers (solid amber)
+    L.polyline([pts[2],pts[3]], {color:'#E8CC7A',weight:2.5,opacity:.8,dashArray:'6 5'}).addTo(syed_map);
+    // Fast boat (aqua dashed)
+    L.polyline([pts[3],pts[4]], {color:'#4fc3d4',weight:3,opacity:.9,dashArray:'10 7'}).addTo(syed_map);
+
+    stops.forEach(function(s) {
+      L.marker(s.coords, {icon:s.icon}).addTo(syed_map)
+        .bindPopup(
+          '<div class="sp-inner"><div class="sp-meta">' + s.meta + '</div><h3>' + s.name + '</h3><p>' + s.info + '</p></div>' +
+          '<img class="sp-img" src="' + s.img + '" alt="' + s.name + '" onerror="this.style.display='none'">',
+          {maxWidth:270}
+        );
+    });
+
+    syed_map.fitBounds(L.latLngBounds(pts).pad(0.08));
+  }
+
+  // Expose so goTo can call it
+  window._syedMapTrigger = function(idx) {
+    if (idx === MAP_SLIDE) setTimeout(buildMap, 100);
+  };
+})();
+</script>
 
 <!-- SLIDE 07 · SANUR | images/07-sanur-bg.jpg → Sanur beach sunrise, calm lagoon
      images/07b-puri-santrian.jpg → Puri Santrian resort pool (from puri-santrian.com) -->
@@ -899,7 +790,7 @@ const slides=document.querySelectorAll('.slide'),total=slides.length;
 let current=0,playing=false,timer=null;
 const nav=document.getElementById('nav'),numEl=document.getElementById('slide-num'),prog=document.getElementById('progress');
 slides.forEach((_,i)=>{const d=document.createElement('button');d.className='dot'+(i===0?' active':'');d.addEventListener('click',()=>goTo(i));nav.appendChild(d);});
-function goTo(n){slides[current].classList.remove('active');nav.querySelectorAll('.dot')[current].classList.remove('active');current=((n%total)+total)%total;slides[current].classList.add('active');nav.querySelectorAll('.dot')[current].classList.add('active');numEl.textContent=String(current+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');prog.style.width=((current+1)/total*100)+'%';}
+function goTo(n){slides[current].classList.remove('active');nav.querySelectorAll('.dot')[current].classList.remove('active');current=((n%total)+total)%total;slides[current].classList.add('active');nav.querySelectorAll('.dot')[current].classList.add('active');numEl.textContent=String(current+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');prog.style.width=((current+1)/total*100)+'%';if(window._syedMapTrigger)window._syedMapTrigger(current);}
 function next(){goTo(current+1);}function prev(){goTo(current-1);}
 function startPlay(){playing=true;clearInterval(timer);timer=setInterval(next,6000);document.getElementById('hint').textContent='← → Navigate · Space = Pause · Esc = Start over';}
 function stopPlay(){playing=false;clearInterval(timer);document.getElementById('hint').textContent='← → Navigate · Space = Auto-play · Esc = Start over';}
