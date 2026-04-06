@@ -367,82 +367,120 @@ body { width:100%; height:100%; height:-webkit-fill-available; min-height:-webki
 </style>
 
 <script>
-(function(){
-  var MAP_SLIDE = 5;
-  var syed_map  = null;
+var syed_map = null;
+var SYED_MAP_SLIDE = 5;
 
-  function buildMap() {
-    if (syed_map) { syed_map.invalidateSize(); return; }
-
-    syed_map = L.map('holidayMap', {
-      scrollWheelZoom: false,
-      zoomControl: true
-    }).setView([20, 80], 3);
-
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; OpenStreetMap &copy; CARTO',
-      subdomains: 'abcd', maxZoom: 19
-    }).addTo(syed_map);
-
-    function pin(color) {
-      return L.divIcon({
-        className: '',
-        html: '<div style="width:13px;height:13px;border-radius:50%;background:' + color + ';border:2px solid rgba(255,255,255,.2);box-shadow:0 0 0 4px ' + color + '44;filter:drop-shadow(0 2px 6px rgba(0,0,0,.7))"></div>',
-        iconSize:[13,13], iconAnchor:[6,6], popupAnchor:[0,-10]
-      });
-    }
-
-    var gold = pin('#C9A84C'), aqua = pin('#4fc3d4');
-
-    var stops = [
-      { name:"London Heathrow", meta:"Departure · 24 July 2026 (evening)",
-        coords:[51.470,-0.454],
-        info:"The adventure begins. Singapore Airlines departs Heathrow — arrive Singapore next morning.",
-        img:"https://images.unsplash.com/photo-1543716627-839b54c40519?auto=format&fit=crop&w=400&q=75", icon:gold },
-      { name:"Singapore", meta:"2 nights · 25–26 July",
-        coords:[1.364,103.991],
-        info:"Supertrees at Gardens by the Bay, Maxwell Road hawker centre, Marina Bay Sands SkyPark observation deck.",
-        img:"https://images.unsplash.com/photo-1525625239917-4bbdffec0984?auto=format&fit=crop&w=400&q=75", icon:gold },
-      { name:"Ubud, Bali", meta:"3 nights · 27–29 July",
-        coords:[-8.507,115.263],
-        info:"Tirta Empul water blessing, Tegallalang rice terraces, Campuhan Ridge Walk at sunrise, Kecak fire dance.",
-        img:"https://images.unsplash.com/photo-1559628233-eb1b1a45564b?auto=format&fit=crop&w=400&q=75", icon:gold },
-      { name:"Sanur, Bali", meta:"4 nights · 30 Jul – 2 Aug",
-        coords:[-8.707,115.262],
-        info:"Puri Santrian resort on the beach. Lagoon swimming, 8km promenade, Sindhu Night Market, Nusa Penida day trip.",
-        img:"https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&q=75", icon:gold },
-      { name:"Gili Air", meta:"5 nights · 3–7 August",
-        coords:[-8.364,116.083],
-        info:"No cars. Wild sea turtles. PADI discovery dive for Laila. Cycling the island. Outdoor movies on the beach.",
-        img:"https://images.unsplash.com/photo-1510014807280-eb5fa103c20c?auto=format&fit=crop&w=400&q=75", icon:aqua }
-    ];
-
-    var pts = stops.map(function(s){ return s.coords; });
-
-    // Flight route (dashed gold)
-    L.polyline([pts[0],pts[1],pts[2]], {color:'#C9A84C',weight:2,opacity:.65,dashArray:'9 11'}).addTo(syed_map);
-    // Road transfers (solid amber)
-    L.polyline([pts[2],pts[3]], {color:'#E8CC7A',weight:2.5,opacity:.8,dashArray:'6 5'}).addTo(syed_map);
-    // Fast boat (aqua dashed)
-    L.polyline([pts[3],pts[4]], {color:'#4fc3d4',weight:3,opacity:.9,dashArray:'10 7'}).addTo(syed_map);
-
-    stops.forEach(function(s) {
-      L.marker(s.coords, {icon:s.icon}).addTo(syed_map)
-        .bindPopup(
-          '<div class="sp-inner"><div class="sp-meta">' + s.meta + '</div><h3>' + s.name + '</h3><p>' + s.info + '</p></div>' +
-          '<img class="sp-img" src="' + s.img + '" alt="' + s.name + '" onerror="this.style.display='none'">',
-          {maxWidth:270}
-        );
-    });
-
-    syed_map.fitBounds(L.latLngBounds(pts).pad(0.08));
+function buildSyedMap() {
+  if (syed_map) {
+    syed_map.invalidateSize();
+    return;
   }
 
-  // Expose so goTo can call it
-  window._syedMapTrigger = function(idx) {
-    if (idx === MAP_SLIDE) setTimeout(buildMap, 100);
-  };
-})();
+  syed_map = L.map('holidayMap', {
+    scrollWheelZoom: false,
+    zoomControl: true
+  }).setView([20, 80], 3);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(syed_map);
+
+  function makePin(color) {
+    return L.divIcon({
+      className: '',
+      html: '<div style="width:13px;height:13px;border-radius:50%;background:' + color + ';border:2px solid rgba(255,255,255,.2);box-shadow:0 0 0 4px ' + color + '44;filter:drop-shadow(0 2px 6px rgba(0,0,0,.7))"></div>',
+      iconSize: [13, 13],
+      iconAnchor: [6, 6],
+      popupAnchor: [0, -12]
+    });
+  }
+
+  var goldPin = makePin('#C9A84C');
+  var aquaPin = makePin('#4fc3d4');
+
+  var stops = [
+    {
+      name: 'London Heathrow',
+      meta: 'Departure &middot; 24 July 2026 (evening)',
+      coords: [51.470, -0.454],
+      info: 'The adventure begins. Singapore Airlines departs Heathrow &mdash; arrive Singapore next morning.',
+      img: 'https://images.unsplash.com/photo-1543716627-839b54c40519?auto=format&fit=crop&w=400&q=75',
+      icon: goldPin
+    },
+    {
+      name: 'Singapore',
+      meta: '2 nights &middot; 25&ndash;26 July',
+      coords: [1.364, 103.991],
+      info: 'Supertrees at Gardens by the Bay, Maxwell Road hawker centre, Marina Bay Sands SkyPark.',
+      img: 'https://images.unsplash.com/photo-1525625239917-4bbdffec0984?auto=format&fit=crop&w=400&q=75',
+      icon: goldPin
+    },
+    {
+      name: 'Ubud, Bali',
+      meta: '3 nights &middot; 27&ndash;29 July',
+      coords: [-8.507, 115.263],
+      info: 'Tirta Empul water blessing, Tegallalang rice terraces, Campuhan Ridge Walk, Kecak fire dance.',
+      img: 'https://images.unsplash.com/photo-1559628233-eb1b1a45564b?auto=format&fit=crop&w=400&q=75',
+      icon: goldPin
+    },
+    {
+      name: 'Sanur, Bali',
+      meta: '4 nights &middot; 30 Jul &ndash; 2 Aug',
+      coords: [-8.707, 115.262],
+      info: 'Puri Santrian resort. Lagoon swimming, 8km promenade, Sindhu Night Market, Nusa Penida day trip.',
+      img: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&q=75',
+      icon: goldPin
+    },
+    {
+      name: 'Gili Air',
+      meta: '5 nights &middot; 3&ndash;7 August',
+      coords: [-8.364, 116.083],
+      info: 'No cars. Wild sea turtles. PADI discovery dive for Laila. Cycling the island. Outdoor movies on the beach.',
+      img: 'https://images.unsplash.com/photo-1510014807280-eb5fa103c20c?auto=format&fit=crop&w=400&q=75',
+      icon: aquaPin
+    }
+  ];
+
+  var pts = stops.map(function(s) { return s.coords; });
+
+  // Flight route — gold dashed
+  L.polyline([pts[0], pts[1], pts[2]], {
+    color: '#C9A84C', weight: 2, opacity: 0.65, dashArray: '9 11'
+  }).addTo(syed_map);
+
+  // Road transfers — amber
+  L.polyline([pts[2], pts[3]], {
+    color: '#E8CC7A', weight: 2.5, opacity: 0.8, dashArray: '6 5'
+  }).addTo(syed_map);
+
+  // Fast boat — aqua dashed
+  L.polyline([pts[3], pts[4]], {
+    color: '#4fc3d4', weight: 3, opacity: 0.9, dashArray: '10 7'
+  }).addTo(syed_map);
+
+  // Markers with popups
+  stops.forEach(function(s) {
+    var html = '<div class="sp-inner">'
+      + '<div class="sp-meta">' + s.meta + '</div>'
+      + '<h3>' + s.name + '</h3>'
+      + '<p>' + s.info + '</p>'
+      + '</div>'
+      + '<img class="sp-img" src="' + s.img + '" alt="' + s.name + '" onerror="this.remove()">';
+    L.marker(s.coords, { icon: s.icon })
+      .addTo(syed_map)
+      .bindPopup(html, { maxWidth: 270 });
+  });
+
+  syed_map.fitBounds(L.latLngBounds(pts).pad(0.08));
+}
+
+window._syedMapTrigger = function(idx) {
+  if (idx === SYED_MAP_SLIDE) {
+    setTimeout(buildSyedMap, 100);
+  }
+};
 </script>
 
 <!-- SLIDE 07 · SANUR | images/07-sanur-bg.jpg → Sanur beach sunrise, calm lagoon
